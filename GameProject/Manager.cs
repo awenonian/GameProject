@@ -14,11 +14,12 @@ namespace GameProject
     {
         private Texture2D background;
         private Texture2D gameOverScreen;
+
         //player sprites
         private Texture2D playerSprite;
 
         private List<Object> objects;
-        private Object player;
+        private Player player;
 
         /// <summary>
         /// Width of the game screen.
@@ -50,12 +51,13 @@ namespace GameProject
             this.width = width;
             this.height = height;
 
+            player = new Player(playerSprite, Vector2.Zero, this);
         }
 
         public void loadContent(ContentManager content)
         {
             //<variable> = content.Load<Texture2D>(<filename - extension>);
-            //e.g. gameOverScreen = content.Load<Texture2D>("GameOver");
+            playerSprite = content.Load<Texture2D>("mario-small");
         }
 
         public void update(GameTime gameTime, KeyboardState state, KeyboardState previousState)
@@ -66,7 +68,7 @@ namespace GameProject
                 objects[i].update(gameTime, width, height);
             }
 
-            //player.processInput(state, previousState, gameTime);
+            player.processInput(state, previousState, gameTime);
             player.update(gameTime, width, height);
 
         }
@@ -80,7 +82,7 @@ namespace GameProject
         {
             if (!gameOver)
             {
-                sb.Draw(background, destinationRectangle: new Rectangle(0, 0, width, height));
+                //sb.Draw(background, destinationRectangle: new Rectangle(0, 0, width, height));
                 foreach (Object o in objects)
                 {
                     o.draw(sb);

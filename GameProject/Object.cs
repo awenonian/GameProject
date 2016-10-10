@@ -14,17 +14,19 @@ namespace GameProject
         private Vector2 origin;
         private Vector2 position;
 
-        private double facing;
+        private Manager manager;
 
-        public Object(Texture2D sprite, Vector2 position)
+        public Object(Texture2D sprite, Vector2 position, Manager manager)
         {
             this.sprite = sprite;
             origin = new Vector2(sprite.Width / 2, sprite.Height / 2);
 
             this.position = position - origin;
-            facing = 0;
+            Facing = 0;
             Speed = Vector2.Zero;
             Radius = 0;
+
+            this.manager = manager;
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace GameProject
             sb.Draw(sprite,
             destinationRectangle: new Rectangle((int)(origin.X + position.X), (int)(origin.Y + position.Y), sprite.Width, sprite.Height),
             origin: origin,
-            rotation: (float)facing);
+            rotation: (float)Facing);
         }
 
         // Variables
@@ -67,6 +69,12 @@ namespace GameProject
         }
 
         public Vector2 Speed
+        {
+            get;
+            protected set;
+        }
+
+        public double Facing
         {
             get;
             protected set;
