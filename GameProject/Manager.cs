@@ -12,8 +12,6 @@ namespace GameProject
 {
     class Manager
     {
-        private Texture2D background;
-        private Texture2D gameOverScreen;
 
         //player sprites
         private Texture2D playerSprite;
@@ -30,9 +28,6 @@ namespace GameProject
         /// </summary>
         private int height;
 
-        private bool gameOver;
-        private int playerBufferSpace;
-
         private Random r;
 
         public Manager()
@@ -42,8 +37,6 @@ namespace GameProject
             width = 0;
             player = null;
             r = new Random();
-            gameOver = false;
-            playerBufferSpace = 100;
         }
 
         public void initialize(int width, int height)
@@ -80,20 +73,13 @@ namespace GameProject
 
         public void draw(SpriteBatch sb)
         {
-            if (!gameOver)
+            //sb.Draw(background, destinationRectangle: new Rectangle(0, 0, width, height));
+            foreach (Object o in objects)
             {
-                //sb.Draw(background, destinationRectangle: new Rectangle(0, 0, width, height));
-                foreach (Object o in objects)
-                {
-                    o.draw(sb);
-                }
+                o.draw(sb);
+            }
 
-                player.draw(sb);
-            }
-            else
-            {
-                sb.Draw(gameOverScreen, destinationRectangle: new Rectangle(0, 0, width, height));
-            }
+            player.draw(sb);
         }
     }
 }

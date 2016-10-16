@@ -22,7 +22,6 @@ namespace GameProject
             origin = new Vector2(sprite.Width / 2, sprite.Height / 2);
 
             this.position = position - origin;
-            Facing = 0;
             Speed = Vector2.Zero;
             Radius = 0;
 

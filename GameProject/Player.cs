@@ -78,10 +78,5 @@ namespace GameProject
         {
             Speed += new Vector2((float)(Math.Cos(Facing) * thrust), (float)(Math.Sin(Facing) * thrust));
         }
-
-        public override void draw(SpriteBatch sb)
-        {
-            base.draw(sb);
-        }
     }
 }
