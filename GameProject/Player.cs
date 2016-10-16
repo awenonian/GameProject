@@ -25,7 +25,7 @@ namespace GameProject
 
         private Manager manager;
 
-        public Player(Texture2D sprite, Vector2 position, Manager manager) : base(sprite, position, manager)
+        public Player(Mesh mesh, Vector2 position, Manager manager) : base(mesh, position, manager)
         {
             //All of these numbers need tweaking.
             moveSpeed = 150f;

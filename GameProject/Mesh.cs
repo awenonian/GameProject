@@ -50,6 +50,38 @@ namespace GameProject
 
         public bool collision(Vector2 pos, Vector2 otherPos, Mesh other)
         {
+            // This should take care of most objects.
+            if (otherPos.X > pos.X + Width)
+            {
+                return false;
+            }
+            if (otherPos.Y > pos.Y + Height)
+            {
+                return false;
+            }
+            if (otherPos.X + other.Width < pos.X)
+            {
+                return false;
+            }
+            if (otherPos.Y + other.Height < pos.Y)
+            {
+                return false;
+            }
+            // Here is more intenstive checking
+            for (int i = 0; i < mesh.Count; i++)
+            {
+                for (int j = 0; j < other.mesh.Count; j++)
+                {
+                    //This is the same check as above, just rewritten
+                    if (!((otherPos.X > pos.X + Width) 
+                        && (otherPos.Y > pos.Y + Height) 
+                        && (otherPos.X + other.Width < pos.X)
+                        && (otherPos.Y + other.Height < pos.Y)))
+                    {
+                        return true;
+                    }
+                }
+            }
             return false;
         }
     }
