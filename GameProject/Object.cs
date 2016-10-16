@@ -10,16 +10,26 @@ namespace GameProject
 {
     abstract class Object
     {
-        private Texture2D sprite;
+        private Mesh mesh;
         private Vector2 origin;
         private Vector2 position;
 
         private Manager manager;
 
-        public Object(Texture2D sprite, Vector2 position, Manager manager)
+        public Vector2 Position
         {
-            this.sprite = sprite;
-            origin = new Vector2(sprite.Width / 2, sprite.Height / 2);
+            get { return position + origin; }
+            protected set { position = value - origin; }
+        }
+
+        public double Radius { get; protected set; }
+        public Vector2 Speed { get; protected set; }
+        public double Facing { get; protected set; }
+
+        public Object(Mesh mesh, Vector2 position, Manager manager)
+        {
+            this.mesh = mesh;
+            origin = new Vector2(mesh.Width / 2, mesh.Height / 2);
 
             this.position = position - origin;
             Speed = Vector2.Zero;
@@ -47,36 +57,17 @@ namespace GameProject
         /// <param name="sb">
         /// The spritebatch for drawing
         /// </param>
-        public virtual void draw(SpriteBatch sb)
+        public void draw(SpriteBatch sb)
         {
-            sb.Draw(sprite,
-            destinationRectangle: new Rectangle((int)(origin.X + position.X), (int)(origin.Y + position.Y), sprite.Width, sprite.Height),
+            sb.Draw(mesh.sprite,
+            destinationRectangle: new Rectangle((int)(origin.X + position.X), (int)(origin.Y + position.Y), mesh.sprite.Width, mesh.sprite.Height),
             origin: origin,
             rotation: (float)Facing);
         }
 
-        // Variables
-
-        public Vector2 Position {
-            get { return position + origin; }
-            protected set { position = value - origin; }
-        }
-
-        public double Radius {
-            get;
-            protected set;
-        }
-
-        public Vector2 Speed
+        public bool collision(Object other)
         {
-            get;
-            protected set;
-        }
-
-        public double Facing
-        {
-            get;
-            protected set;
+            return mesh.collision(Position, other.Position, other.mesh);
         }
     }
 }
