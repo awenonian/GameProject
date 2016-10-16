@@ -11,7 +11,8 @@ namespace GameProject
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        KeyboardState previousState;
+        KeyboardState prevKState;
+        GamePadState prevGState;
 
         Manager manager;
 
@@ -39,6 +40,9 @@ namespace GameProject
                 width: graphics.GraphicsDevice.Viewport.Width,
                 height: graphics.GraphicsDevice.Viewport.Height);
             IsMouseVisible = false;
+
+            prevKState = Keyboard.GetState();
+            prevGState = GamePad.GetState(PlayerIndex.One);
 
         }
 
@@ -72,13 +76,15 @@ namespace GameProject
             if (IsActive)
             {
                 KeyboardState kState = Keyboard.GetState();
+                GamePadState gState = GamePad.GetState(PlayerIndex.One);
                 //MouseState mState = Mouse.GetState();
 
                 if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || kState.IsKeyDown(Keys.Escape))
                     Exit();
 
-                manager.update(gameTime, kState, previousState);
-                previousState = kState;
+                manager.update(gameTime, kState, prevKState, gState, prevGState);
+                prevKState = kState;
+                prevGState = gState;
 
                 base.Update(gameTime);
             }

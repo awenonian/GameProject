@@ -52,15 +52,23 @@ namespace GameProject
             playerSprite = content.Load<Texture2D>("mario-small");
         }
 
-        public void update(GameTime gameTime, KeyboardState state, KeyboardState previousState)
+        public void update(GameTime gameTime, KeyboardState kState, KeyboardState prevKState, GamePadState gState, GamePadState prevGState)
         {
 
             for (int i = objects.Count - 1; i >= 0; i--)
             {
                 objects[i].update(gameTime, width, height);
             }
-
-            player.processInput(state, previousState, gameTime);
+            // If someone is operating keyboard
+            if (!kState.Equals(prevKState))
+            {
+                player.processInput(kState, prevKState, gameTime);
+            }
+            // Otherwise, assume Game Pad controls
+            else
+            {
+                player.processInput(gState, prevGState, gameTime);
+            }
             player.update(gameTime, width, height);
 
         }

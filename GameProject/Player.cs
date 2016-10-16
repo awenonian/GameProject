@@ -21,6 +21,7 @@ namespace GameProject
 
         private bool isFloating;
         private double floatTimer;
+        private double floatTime;
 
         private Manager manager;
 
@@ -37,6 +38,7 @@ namespace GameProject
 
             isFloating = false;
             floatTimer = 0;
+            floatTimer = .25;
 
             this.manager = manager;
             Radius = 16;
@@ -67,6 +69,48 @@ namespace GameProject
             }
         }
 
+        public void processInput(GamePadState state, GamePadState prevState, GameTime gameTime)
+        {
+            if (isGrounded)
+            {
+                if (state.IsButtonDown(Buttons.A))
+                {
+                    Speed = new Vector2(Speed.X, -jumpSpeed);
+                    isGrounded = false;
+                }
+                if (state.ThumbSticks.Left.Length() > .25)
+                {
+                    Speed =  new Vector2(moveSpeed * state.ThumbSticks.Left.X, Speed.Y);
+                }
+                else
+                {
+                    Speed = new Vector2(0, Speed.Y);
+                }
+            }
+            else
+            {
+                if (state.IsButtonDown(Buttons.A) && !prevState.IsButtonDown(Buttons.A))
+                {
+                    bool airDash = false;
+                    Vector2 dashVec = Vector2.Zero;
+                    if (state.ThumbSticks.Left.Length() > .25)
+                    {
+                        dashVec = state.ThumbSticks.Left;
+                        dashVec.Y = -dashVec.Y;
+                        airDash = true;
+                    }
+                    if (airDash)
+                    {
+                        dashVec.Normalize();
+                        Position += dashLength * dashVec;
+                        floatTimer = .5;
+                        isFloating = true;
+                        Speed = Vector2.Zero;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// This is during the input step. Takes input, and produces the necessary changes
         /// </summary>
@@ -75,7 +119,6 @@ namespace GameProject
         /// </param>
         public void processInput(KeyboardState state, KeyboardState prevState, GameTime gameTime)
         {
-            double elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
             if (isGrounded)
             {
                 if (state.IsKeyDown(Keys.Space))
@@ -127,7 +170,7 @@ namespace GameProject
                     {
                         dashVec.Normalize();
                         Position += dashLength * dashVec;
-                        floatTimer = .5;
+                        floatTimer = floatTime;
                         isFloating = true;
                         Speed = Vector2.Zero;
                     }
