@@ -11,23 +11,32 @@ namespace GameProject
 {
     class Player : Object
     {
-        private double moveSpeed;
-        private double turnSpeed;
+        private float moveSpeed;
+        private float jumpSpeed;
+        private float dashLength;
 
-        private double friction;
+        private Vector2 gravity;
 
         private bool isGrounded;
+
+        private bool isFloating;
+        private double floatTimer;
 
         private Manager manager;
 
         public Player(Texture2D sprite, Vector2 position, Manager manager) : base(sprite, position, manager)
         {
+            //All of these numbers need tweaking.
             moveSpeed = 150f;
-            turnSpeed = 5f;
+            jumpSpeed = 500f;
+            dashLength = 100f;
 
-            friction = .0001;
+            gravity = new Vector2(0, 5000f);
 
             isGrounded = false;
+
+            isFloating = false;
+            floatTimer = 0;
 
             this.manager = manager;
             Radius = 16;
@@ -40,19 +49,21 @@ namespace GameProject
             if (isGrounded)
             {
                 Speed = new Vector2(Speed.X, 0);
-                //Speed *= (float)Math.Pow(friction, gameTime.ElapsedGameTime.TotalSeconds);
             }
-            if (!isGrounded)
+            if (!isGrounded && !isFloating)
             {
-                Speed += (float) (gameTime.ElapsedGameTime.TotalSeconds) * new Vector2(0, 1000f);
+                //Gravity
+                Speed += (float)(gameTime.ElapsedGameTime.TotalSeconds) * gravity;
             }
-            if (Position.Y > 300)
+            if (Position.Y > 300) //This is the temporary ground, later we'll put collision detection in this statement
             {
                 isGrounded = true;
+                isFloating = false;
             }
-            if (Speed.Length() < 1)
+            floatTimer -= gameTime.ElapsedGameTime.TotalSeconds;
+            if (floatTimer < 0)
             {
-                Speed = Vector2.Zero;
+                isFloating = false;
             }
         }
 
@@ -65,24 +76,62 @@ namespace GameProject
         public void processInput(KeyboardState state, KeyboardState prevState, GameTime gameTime)
         {
             double elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (state.IsKeyDown(Keys.Space) && isGrounded)
+            if (isGrounded)
             {
-                Speed += new Vector2(0, -150f);
-                isGrounded = false;
-            }
-            if (state.IsKeyDown(Keys.A))
-            {
-                Speed = new Vector2((float) -moveSpeed, Speed.Y);
+                if (state.IsKeyDown(Keys.Space))
+                {
+                    Speed += new Vector2(0, -jumpSpeed);
+                    isGrounded = false;
+                }
+                if (state.IsKeyDown(Keys.A))
+                {
+                    Speed = new Vector2(-moveSpeed, Speed.Y);
+                }
+                else
+                {
+                    // This should stop the character if no sideways key is pressed
+                    Speed = new Vector2(0, Speed.Y);
+                }
+                if (state.IsKeyDown(Keys.D))
+                {
+                    Speed = new Vector2(moveSpeed, Speed.Y);
+                }
             }
             else
             {
-                // This should stop the character if no sideways key is pressed
-                Speed = new Vector2(0, Speed.Y);
-            }
-            if (state.IsKeyDown(Keys.D))
-            {
-                Speed = new Vector2((float)moveSpeed, Speed.Y);
+                if (state.IsKeyDown(Keys.Space) && !prevState.IsKeyDown(Keys.Space))
+                {
+                    bool airDash = false;
+                    Vector2 dashVec = new Vector2(0, 0);
+                    if (state.IsKeyDown(Keys.W))
+                    {
+                        dashVec.Y -= 1;
+                        airDash = true;
+                    }
+                    if (state.IsKeyDown(Keys.S))
+                    {
+                        dashVec.Y += 1;
+                        airDash = true;
+                    }
+                    if (state.IsKeyDown(Keys.A))
+                    {
+                        dashVec.X -= 1;
+                        airDash = true;
+                    }
+                    if (state.IsKeyDown(Keys.D))
+                    {
+                        dashVec.X += 1;
+                        airDash = true;
+                    }
+                    if (airDash)
+                    {
+                        dashVec.Normalize();
+                        Position += dashLength * dashVec;
+                        floatTimer = .5;
+                        isFloating = true;
+                        Speed = Vector2.Zero;
+                    }
+                }
             }
         }
     }
