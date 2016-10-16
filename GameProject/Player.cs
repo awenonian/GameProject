@@ -11,19 +11,23 @@ namespace GameProject
 {
     class Player : Object
     {
-        private double thrust;
+        private double moveSpeed;
         private double turnSpeed;
 
         private double friction;
+
+        private bool isGrounded;
 
         private Manager manager;
 
         public Player(Texture2D sprite, Vector2 position, Manager manager) : base(sprite, position, manager)
         {
-            thrust = 300f;
+            moveSpeed = 150f;
             turnSpeed = 5f;
 
-            friction = .5;
+            friction = .0001;
+
+            isGrounded = false;
 
             this.manager = manager;
             Radius = 16;
@@ -33,8 +37,19 @@ namespace GameProject
         public override void update(GameTime gameTime, int width, int height)
         {
             base.update(gameTime, width, height);
-
-            Speed *= (float)Math.Pow(friction, gameTime.ElapsedGameTime.TotalSeconds);
+            if (isGrounded)
+            {
+                Speed = new Vector2(Speed.X, 0);
+                //Speed *= (float)Math.Pow(friction, gameTime.ElapsedGameTime.TotalSeconds);
+            }
+            if (!isGrounded)
+            {
+                Speed += (float) (gameTime.ElapsedGameTime.TotalSeconds) * new Vector2(0, 1000f);
+            }
+            if (Position.Y > 300)
+            {
+                isGrounded = true;
+            }
             if (Speed.Length() < 1)
             {
                 Speed = Vector2.Zero;
@@ -51,32 +66,24 @@ namespace GameProject
         {
             double elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (state.IsKeyDown(Keys.W))
+            if (state.IsKeyDown(Keys.Space) && isGrounded)
             {
-                accelerate(thrust * elapsedTime);
+                Speed += new Vector2(0, -150f);
+                isGrounded = false;
             }
             if (state.IsKeyDown(Keys.A))
             {
-                rotate(-turnSpeed * elapsedTime);
+                Speed = new Vector2((float) -moveSpeed, Speed.Y);
             }
-            if (state.IsKeyDown(Keys.S))
+            else
             {
-                accelerate(-thrust * elapsedTime);
+                // This should stop the character if no sideways key is pressed
+                Speed = new Vector2(0, Speed.Y);
             }
             if (state.IsKeyDown(Keys.D))
             {
-                rotate(turnSpeed * elapsedTime);
+                Speed = new Vector2((float)moveSpeed, Speed.Y);
             }
-        }
-
-        private void rotate(double rotation)
-        {
-            Facing += rotation;
-        }
-
-        private void accelerate(double thrust)
-        {
-            Speed += new Vector2((float)(Math.Cos(Facing) * thrust), (float)(Math.Sin(Facing) * thrust));
         }
     }
 }

@@ -12,7 +12,6 @@ namespace GameProject
 {
     class Manager
     {
-
         //player sprites
         private Texture2D playerSprite;
 
