@@ -28,10 +28,10 @@ namespace GameProject
         {
             //All of these numbers need tweaking.
             moveSpeed = 150f;
-            jumpSpeed = 500f;
+            jumpSpeed = 1000f;
             dashLength = 100f;
 
-            gravity = new Vector2(0, 5000f);
+            gravity = new Vector2(0, 3000f);
 
             isGrounded = false;
 
@@ -80,7 +80,7 @@ namespace GameProject
             {
                 if (state.IsKeyDown(Keys.Space))
                 {
-                    Speed += new Vector2(0, -jumpSpeed);
+                    Speed = new Vector2(Speed.X, -jumpSpeed);
                     isGrounded = false;
                 }
                 if (state.IsKeyDown(Keys.A))
