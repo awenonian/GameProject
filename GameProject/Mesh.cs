@@ -82,6 +82,7 @@ namespace GameProject
             bool[,] filledPixels = new bool[sprite.Width, sprite.Height];
             bool[,] counted = new bool[sprite.Width, sprite.Height];
 
+            // Set up: Mark whether pixels are filled or not, and mark all pixels as uncounted
             for (int i = 0; i < sprite.Width; i++)
             {
                 for (int j = 0; j < sprite.Height; j++)
@@ -90,14 +91,17 @@ namespace GameProject
                     {
                         filled[i * sprite.Height + j] = Color.Black; //This is for testing
                         filledPixels[i, j] = true;
-                    } else
+                    }
+                    else
                     {
-                        filled[i * sprite.Height + j] = Color.White; //This is for testing
+                        filled[i * sprite.Height + j] = new Color(0f, 0f, 0f, 0f); //This is for testing
                         filledPixels[i, j] = false;
                     }
                     counted[i, j] = false;
                 }
             }
+
+
             for (int i = 0; i < sprite.Width; i++)
             {
                 for (int j = 0; j < sprite.Height; j++)
@@ -111,7 +115,7 @@ namespace GameProject
 
                     // Start a new rectangle, at the current position.
                     Rectangle rect = new Rectangle(i, j, 1, 1);
-                    // These represent the column and row right outside the rectangle
+                    // These represent the column and row just outside the rectangle
                     int xBound = i + 2;
                     int yBound = j + 2;
 
@@ -241,10 +245,23 @@ namespace GameProject
             return false;
         }
 
-        public void draw(SpriteBatch sb)
+        public void draw(SpriteBatch sb, Vector2 position, Vector2 origin)
         {
-            sb.Draw(texture: boxes, position: Vector2.Zero);
-            sb.Draw(texture: filledTex, position: new Vector2(100, 0));
+            sb.Draw(texture: filledTex,
+                destinationRectangle: new Rectangle(0, 0, sprite.Width * 8, sprite.Height * 4));
+            sb.Draw(texture: boxes,
+                destinationRectangle: new Rectangle(0, 0, sprite.Width * 8, sprite.Height * 4));
+
+            /*
+            sb.Draw(texture: boxes,
+                destinationRectangle: new Rectangle(500, 0, sprite.Width * 8, sprite.Height * 4));
+            sb.Draw(texture: filledTex,
+                destinationRectangle: new Rectangle(500, 0, sprite.Width*8, sprite.Height*4));
+                */
+
+            sb.Draw(texture: boxes,
+            destinationRectangle: new Rectangle((int)(origin.X + position.X), (int)(origin.Y + position.Y), sprite.Width, sprite.Height),
+            origin: origin);
         }
     }
 }
