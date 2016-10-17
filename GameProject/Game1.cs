@@ -118,7 +118,7 @@ namespace GameProject
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
             //spriteBatch.Draw(texture, position);
             manager.draw(spriteBatch);
             spriteBatch.End();

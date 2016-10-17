@@ -11,16 +11,11 @@ namespace GameProject
     abstract class Object
     {
         private Mesh mesh;
-        private Vector2 origin;
         private Vector2 position;
 
         private Manager manager;
 
-        public Vector2 Position
-        {
-            get { return position + origin; }
-            protected set { position = value - origin; }
-        }
+        public Vector2 Position { get; protected set; }
 
         public double Radius { get; protected set; }
         public Vector2 Speed { get; protected set; }
@@ -29,9 +24,8 @@ namespace GameProject
         public Object(Mesh mesh, Vector2 position, Manager manager)
         {
             this.mesh = mesh;
-            origin = new Vector2(mesh.Width / 2, mesh.Height / 2);
 
-            this.position = position - origin;
+            Position = position;
             Speed = Vector2.Zero;
             Radius = 0;
 
@@ -59,10 +53,12 @@ namespace GameProject
         /// </param>
         public void draw(SpriteBatch sb)
         {
-            sb.Draw(mesh.sprite,
-            destinationRectangle: new Rectangle((int)(origin.X + position.X), (int)(origin.Y + position.Y), mesh.Width, mesh.Height),
+            /*sb.Draw(mesh.sprite,
+            destinationRectangle: new Rectangle((int)(Position.X), (int)(Position.Y), mesh.Width, mesh.Height),
+            sourceRectangle: new Rectangle(0, 0, mesh.sprite.Width, mesh.sprite.Height),
             origin: origin,
-            rotation: (float)Facing);
+            rotation: (float)Facing);*/
+            sb.Draw(mesh.sprite, Position, new Rectangle(0, 0, mesh.Width, mesh.Height), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
         public bool collision(Object other)

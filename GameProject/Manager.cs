@@ -50,7 +50,7 @@ namespace GameProject
             this.height = height;
 
             player = new Player(playerMesh, new Vector2(300, 100), this);
-            testWall = new Wall(wallMesh, new Rectangle(256, 16, 512, 32), this);
+            testWall = new Wall(wallMesh, new Rectangle(0, 300, 512, 32), this);
         }
 
         public void loadContent(ContentManager content)
@@ -65,6 +65,11 @@ namespace GameProject
 
         public void update(GameTime gameTime, KeyboardState kState, KeyboardState prevKState, GamePadState gState, GamePadState prevGState)
         {
+
+            if (testWall.collision(player))
+            {
+                player.onCollision();
+            }
 
             for (int i = objects.Count - 1; i >= 0; i--)
             {

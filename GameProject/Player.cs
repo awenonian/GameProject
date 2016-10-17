@@ -68,6 +68,12 @@ namespace GameProject
             }
         }
 
+        public void onCollision()
+        {
+            isGrounded = true;
+            isFloating = false;
+        }
+
         public void processInput(GamePadState state, GamePadState prevState, GameTime gameTime)
         {
             if (isGrounded)
