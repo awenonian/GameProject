@@ -18,7 +18,7 @@ namespace GameProject
 
         private Texture2D boxes;
 
-        public Mesh(Texture2D sprite, bool simpleCollisions)
+        public Mesh(Texture2D sprite, bool simpleCollisions, GraphicsDevice graphicsDevice)
         {
             this.sprite = sprite;
             mesh = new List<Rectangle>();
@@ -31,7 +31,7 @@ namespace GameProject
                 mesh = calculateMesh(sprite, 5);
             }
 
-            Texture2D boxes = new Texture2D(null, sprite.Width, sprite.Height);
+            boxes = new Texture2D(graphicsDevice, sprite.Width, sprite.Height);
             Color[] data = new Color[sprite.Width * sprite.Height];
             foreach (Rectangle r in mesh)
             {
@@ -40,6 +40,7 @@ namespace GameProject
                 data[(r.Y + r.Height) * sprite.Width + r.X] = Color.Coral;
                 data[(r.Y + r.Height) * sprite.Width + r.X + r.Width] = Color.Coral;
             }
+            boxes.SetData(data);
         }
 
         /// <summary>
@@ -99,6 +100,11 @@ namespace GameProject
                         bool growRight = true;
                         for (int k = 0; k < rect.Height; k++)
                         {
+                            if (j + k >= counted.GetLength(1) || xBound >= counted.GetLength(0))
+                            {
+                                growRight = false;
+                                break;
+                            }
                             if (!counted[xBound, j + k])
                             {
                                 counted[xBound, j + k] = true;
@@ -120,6 +126,11 @@ namespace GameProject
                         bool growDown = true;
                         for (int k = 0; k < rect.Width; k++)
                         {
+                            if (i+k >= counted.GetLength(0) || yBound >= counted.GetLength(1))
+                            {
+                                growDown = false;
+                                break;
+                            }
                             if (!counted[i + k, yBound])
                             {
                                 counted[i + k, yBound] = true;
@@ -186,7 +197,7 @@ namespace GameProject
 
         public void draw(SpriteBatch sb)
         {
-            sb.Draw(boxes);
+            sb.Draw(texture: boxes, position: Vector2.Zero);
         }
     }
 }

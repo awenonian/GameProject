@@ -38,7 +38,7 @@ namespace GameProject
 
             isFloating = false;
             floatTimer = 0;
-            floatTimer = .25;
+            floatTime = .25;
 
             this.manager = manager;
             Radius = 16;
@@ -103,7 +103,7 @@ namespace GameProject
                     {
                         dashVec.Normalize();
                         Position += dashLength * dashVec;
-                        floatTimer = .5;
+                        floatTimer = floatTime;
                         isFloating = true;
                         Speed = Vector2.Zero;
                     }

@@ -47,11 +47,11 @@ namespace GameProject
             player = new Player(playerMesh, Vector2.Zero, this);
         }
 
-        public void loadContent(ContentManager content)
+        public void loadContent(ContentManager content, GraphicsDevice graphicsDevice)
         {
             //<variable> = content.Load<Texture2D>(<filename - extension>);
             playerSprite = content.Load<Texture2D>("mario-small");
-            playerMesh = new Mesh(playerSprite, false);
+            playerMesh = new Mesh(playerSprite, false, graphicsDevice);
         }
 
         public void update(GameTime gameTime, KeyboardState kState, KeyboardState prevKState, GamePadState gState, GamePadState prevGState)
@@ -62,7 +62,7 @@ namespace GameProject
                 objects[i].update(gameTime, width, height);
             }
             // If someone is operating keyboard
-            if (!kState.Equals(prevKState))
+            if (kState.GetPressedKeys().Length != 0)
             {
                 player.processInput(kState, prevKState, gameTime);
             }
