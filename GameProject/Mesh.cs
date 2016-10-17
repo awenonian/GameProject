@@ -16,17 +16,11 @@ namespace GameProject
         public int Width { get { return sprite.Width; } }
         public int Height { get { return sprite.Height; } }
 
-        //For testing:
-        private Texture2D boxes;
-
-        private Color[] filled;
-        private Texture2D filledTex;
-
-        public Mesh(Texture2D sprite, bool simpleCollisions, GraphicsDevice graphicsDevice)
+        public Mesh(Texture2D sprite, bool simpleCollisions)
         {
-            filled = new Color[sprite.Width * sprite.Height];
 
             this.sprite = sprite;
+            Console.WriteLine(sprite.Width + ", " + sprite.Height);
             mesh = new List<Rectangle>();
             if (simpleCollisions)
             {
@@ -36,27 +30,6 @@ namespace GameProject
             {
                 mesh = calculateMesh(sprite, 5);
             }
-
-            filledTex = new Texture2D(graphicsDevice, sprite.Width, sprite.Height);
-            filledTex.SetData(filled);
-
-            //For Testing:
-            Color[] colors = { Color.AliceBlue, Color.AntiqueWhite, Color.Beige, Color.Black, Color.BlanchedAlmond, Color.BlueViolet, Color.BurlyWood, Color.Chartreuse, Color.Coral, Color.Crimson, Color.DarkBlue };
-            boxes = new Texture2D(graphicsDevice, sprite.Width, sprite.Height);
-            Color[] data = new Color[sprite.Width * sprite.Height];
-            int index = 0;
-            foreach (Rectangle r in mesh)
-            {
-                for (int i = r.X; i < r.X + r.Width; i++)
-                {
-                    for (int j = r.Y; j < r.Y + r.Height; j++)
-                    {
-                        data[i * sprite.Width + j] = colors[index];
-                    }
-                }
-                index = (index + 1) % colors.Length;
-            }
-            boxes.SetData(data);
         }
 
         /// <summary>
@@ -87,14 +60,12 @@ namespace GameProject
             {
                 for (int j = 0; j < sprite.Height; j++)
                 {
-                    if (spriteData[i*sprite.Height + j].A > 127)
+                    if (spriteData[j*sprite.Width + i].A > 127)
                     {
-                        filled[i * sprite.Height + j] = Color.Black; //This is for testing
                         filledPixels[i, j] = true;
                     }
                     else
                     {
-                        filled[i * sprite.Height + j] = new Color(0f, 0f, 0f, 0f); //This is for testing
                         filledPixels[i, j] = false;
                     }
                     counted[i, j] = false;
@@ -112,7 +83,6 @@ namespace GameProject
                         counted[i, j] = true;
                         continue;
                     }
-
                     // Start a new rectangle, at the current position.
                     Rectangle rect = new Rectangle(i, j, 1, 1);
                     // These represent the column and row just outside the rectangle
@@ -150,15 +120,6 @@ namespace GameProject
                         // If growth would be successful, then grow, and label that we can grow again.
                         if (growRight)
                         {
-                            // Count the new pixels
-                            for (int k = 0; k < rect.Height; k++)
-                            {
-                                if (!counted[xBound, j + k])
-                                {
-                                    counted[xBound, j + k] = true;
-                                    newPixels++;
-                                }
-                            }
                             // Update bounds
                             canGrow = true;
                             xBound++;
@@ -182,15 +143,6 @@ namespace GameProject
                         }
                         if (growDown)
                         {
-                            // Count all the new pixels that we added
-                            for (int k = 0; k < rect.Width; k++)
-                            {
-                                if (!counted[i + k, yBound])
-                                {
-                                    counted[i + k, yBound] = true;
-                                    newPixels++;
-                                }
-                            }
                             // Update bounds
                             canGrow = true;
                             yBound++;
@@ -198,7 +150,21 @@ namespace GameProject
                             
                         }
                     }
-                    // Only actually add the rectangle if it contains at least levelOfDetail new pixels
+
+                    // Count the new pixels
+                    for (int k = rect.X; k < rect.X + rect.Width; k++)
+                    {
+                        for (int l = rect.Y; l < rect.Y + rect.Height; l++)
+                        {
+                            if (!counted[k, l])
+                            {
+                                counted[k, l] = true;
+                                newPixels++;
+                            }
+
+                        }
+                    }
+                    // If the rectangle matters
                     if (newPixels > levelOfDetail)
                     {
                         mesh.Add(rect);
@@ -243,25 +209,6 @@ namespace GameProject
                 }
             }
             return false;
-        }
-
-        public void draw(SpriteBatch sb, Vector2 position, Vector2 origin)
-        {
-            sb.Draw(texture: filledTex,
-                destinationRectangle: new Rectangle(0, 0, sprite.Width * 8, sprite.Height * 4));
-            sb.Draw(texture: boxes,
-                destinationRectangle: new Rectangle(0, 0, sprite.Width * 8, sprite.Height * 4));
-
-            /*
-            sb.Draw(texture: boxes,
-                destinationRectangle: new Rectangle(500, 0, sprite.Width * 8, sprite.Height * 4));
-            sb.Draw(texture: filledTex,
-                destinationRectangle: new Rectangle(500, 0, sprite.Width*8, sprite.Height*4));
-                */
-
-            sb.Draw(texture: boxes,
-            destinationRectangle: new Rectangle((int)(origin.X + position.X), (int)(origin.Y + position.Y), sprite.Width, sprite.Height),
-            origin: origin);
         }
     }
 }

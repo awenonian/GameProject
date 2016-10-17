@@ -47,11 +47,11 @@ namespace GameProject
             player = new Player(playerMesh, Vector2.Zero, this);
         }
 
-        public void loadContent(ContentManager content, GraphicsDevice graphicsDevice)
+        public void loadContent(ContentManager content)
         {
             //<variable> = content.Load<Texture2D>(<filename - extension>);
             playerSprite = content.Load<Texture2D>("mario-small");
-            playerMesh = new Mesh(playerSprite, false, graphicsDevice);
+            playerMesh = new Mesh(playerSprite, false);
         }
 
         public void update(GameTime gameTime, KeyboardState kState, KeyboardState prevKState, GamePadState gState, GamePadState prevGState)

@@ -54,7 +54,7 @@ namespace GameProject
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            manager.loadContent(Content, GraphicsDevice);
+            manager.loadContent(Content);
         }
 
         /// <summary>
