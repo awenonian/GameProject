@@ -31,14 +31,13 @@ namespace GameProject
             moveSpeed = 150f;
             jumpSpeed = 1000f;
             dashLength = 100f;
-
+            floatTime = .25;
             gravity = new Vector2(0, 3000f);
 
             isGrounded = false;
 
             isFloating = false;
             floatTimer = 0;
-            floatTime = .25;
 
             this.manager = manager;
             Radius = 16;
