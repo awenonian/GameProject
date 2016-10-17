@@ -26,7 +26,7 @@ namespace GameProject
             }
             else
             {
-                mesh = calculateMesh(sprite);
+                mesh = calculateMesh(sprite, 5);
             }
         }
 
@@ -37,14 +37,101 @@ namespace GameProject
         /// <param name="sprite">
         /// The sprite to calculate the mesh of.
         /// </param>
+        /// <param name="levelOfDetail">
+        /// The amount of new pixels a rectangle must include to be included. Lower numbers are higher detail, higher numbers are faster.
+        /// </param>
         /// <returns>
         /// A List with the series of rectangles representing the sprite.
         /// </returns>
-        private List<Rectangle> calculateMesh(Texture2D sprite)
+        private List<Rectangle> calculateMesh(Texture2D sprite, int levelOfDetail)
         {
             List<Rectangle> mesh = new List<Rectangle>();
             Color[] spriteData = new Color[sprite.Width * sprite.Height];
             sprite.GetData(0, null, spriteData, 0, sprite.Width*sprite.Height);
+            bool[,] filledPixels = new bool[sprite.Width, sprite.Height];
+            bool[,] counted = new bool[sprite.Width, sprite.Height];
+            for (int i = 0; i < sprite.Width; i++)
+            {
+                for (int j = 0; j < sprite.Height; j++)
+                {
+                    if (spriteData[i*sprite.Height + j].A > 127)
+                    {
+                        filledPixels[i, j] = true;
+                    } else
+                    {
+                        filledPixels[i, j] = false;
+                    }
+                    counted[i, j] = false;
+                }
+            }
+            for (int i = 0; i < sprite.Width; i++)
+            {
+                for (int j = 0; j < sprite.Height; j++)
+                {
+                    if (counted[i, j] || !filledPixels[i, j])
+                    {
+                        counted[i, j] = true;
+                        continue;
+                    }
+
+                    Rectangle rect = new Rectangle(i, j, 0, 0);
+                    int xBound = i + 1;
+                    int yBound = j + 1;
+
+                    int newPixels = 0;
+
+                    bool canGrow = true;
+                    while (canGrow)
+                    {
+                        canGrow = false;
+                        bool growRight = true;
+                        for (int k = 0; k < rect.Height; k++)
+                        {
+                            if (!counted[xBound, j + k])
+                            {
+                                counted[xBound, j + k] = true;
+                                newPixels++;
+                            }
+                            if (!filledPixels[xBound, j + k])
+                            {
+                                growRight = false;
+                                break;
+                            }
+                        }
+                        if (growRight)
+                        {
+                            canGrow = true;
+                            xBound++;
+                            rect.Width++;
+                        }
+
+                        bool growDown = true;
+                        for (int k = 0; k < rect.Width; k++)
+                        {
+                            if (!counted[i + k, yBound])
+                            {
+                                counted[i + k, yBound] = true;
+                                newPixels++;
+                            }
+                            if (!filledPixels[i + k, yBound])
+                            {
+                                growDown = false;
+                                break;
+                            }
+                        }
+                        if (growDown)
+                        {
+                            canGrow = true;
+                            yBound++;
+                            rect.Height++;
+                        }
+                    }
+                    if (newPixels > levelOfDetail)
+                    {
+                        mesh.Add(rect);
+                    }
+                }
+            }
             return mesh;
         }
 
