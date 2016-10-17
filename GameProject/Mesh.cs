@@ -13,8 +13,8 @@ namespace GameProject
         public Texture2D sprite { get; private set; }
         public List<Rectangle> mesh { get; private set; }
 
-        public int Width { get { return sprite.Width; } private set { } }
-        public int Height { get { return sprite.Height; } private set { } }
+        public int Width { get { return sprite.Width; } }
+        public int Height { get { return sprite.Height; } }
 
         //For testing:
         private Texture2D boxes;
@@ -75,21 +75,24 @@ namespace GameProject
         private List<Rectangle> calculateMesh(Texture2D sprite, int levelOfDetail)
         {
             List<Rectangle> mesh = new List<Rectangle>();
+
             Color[] spriteData = new Color[sprite.Width * sprite.Height];
             sprite.GetData(0, null, spriteData, 0, sprite.Width*sprite.Height);
+
             bool[,] filledPixels = new bool[sprite.Width, sprite.Height];
             bool[,] counted = new bool[sprite.Width, sprite.Height];
+
             for (int i = 0; i < sprite.Width; i++)
             {
                 for (int j = 0; j < sprite.Height; j++)
                 {
                     if (spriteData[i*sprite.Height + j].A > 127)
                     {
-                        filled[i * sprite.Height + j] = Color.Black;
+                        filled[i * sprite.Height + j] = Color.Black; //This is for testing
                         filledPixels[i, j] = true;
                     } else
                     {
-                        filled[i * sprite.Height + j] = Color.White;
+                        filled[i * sprite.Height + j] = Color.White; //This is for testing
                         filledPixels[i, j] = false;
                     }
                     counted[i, j] = false;
@@ -99,60 +102,73 @@ namespace GameProject
             {
                 for (int j = 0; j < sprite.Height; j++)
                 {
+                    // Skip already counted, or empty pixels.
                     if (counted[i, j] || !filledPixels[i, j])
                     {
                         counted[i, j] = true;
                         continue;
                     }
 
-                    Rectangle rect = new Rectangle(i, j, 0, 0);
-                    int xBound = i + 1;
-                    int yBound = j + 1;
+                    // Start a new rectangle, at the current position.
+                    Rectangle rect = new Rectangle(i, j, 1, 1);
+                    // These represent the column and row right outside the rectangle
+                    int xBound = i + 2;
+                    int yBound = j + 2;
 
+                    // How many new pixels we've added to the mesh
                     int newPixels = 0;
 
+                    // Whether or not we can grow the rectangle
                     bool canGrow = true;
                     while (canGrow)
                     {
+                        // Assume we can't grow the rectangle
                         canGrow = false;
+
+                        // Assume we can grow to the right
                         bool growRight = true;
+                        // Along the height of the rectangle
                         for (int k = 0; k < rect.Height; k++)
                         {
-                            if (j + k >= counted.GetLength(1) || xBound >= counted.GetLength(0))
+                            // Check if the sprite boundary allows the rectangle to grow
+                            if (j + k >= sprite.Height || xBound >= sprite.Width)
                             {
                                 growRight = false;
                                 break;
                             }
-                            if (!counted[xBound, j + k])
-                            {
-                                counted[xBound, j + k] = true;
-                                newPixels++;
-                            }
+                            // If we find an empty pixel, we can't grow
                             if (!filledPixels[xBound, j + k])
                             {
                                 growRight = false;
                                 break;
                             }
                         }
+                        // If growth would be successful, then grow, and label that we can grow again.
                         if (growRight)
                         {
+                            // Count the new pixels
+                            for (int k = 0; k < rect.Height; k++)
+                            {
+                                if (!counted[xBound, j + k])
+                                {
+                                    counted[xBound, j + k] = true;
+                                    newPixels++;
+                                }
+                            }
+                            // Update bounds
                             canGrow = true;
                             xBound++;
                             rect.Width++;
+                            
                         }
-
+                        // Similar process, just along the width of the rectangle (at the bottom)
                         bool growDown = true;
                         for (int k = 0; k < rect.Width; k++)
                         {
-                            if (i+k >= counted.GetLength(0) || yBound >= counted.GetLength(1))
+                            if (i+k >= sprite.Width || yBound >= sprite.Height)
                             {
                                 growDown = false;
                                 break;
-                            }
-                            if (!counted[i + k, yBound])
-                            {
-                                counted[i + k, yBound] = true;
-                                newPixels++;
                             }
                             if (!filledPixels[i + k, yBound])
                             {
@@ -162,11 +178,23 @@ namespace GameProject
                         }
                         if (growDown)
                         {
+                            // Count all the new pixels that we added
+                            for (int k = 0; k < rect.Width; k++)
+                            {
+                                if (!counted[i + k, yBound])
+                                {
+                                    counted[i + k, yBound] = true;
+                                    newPixels++;
+                                }
+                            }
+                            // Update bounds
                             canGrow = true;
                             yBound++;
                             rect.Height++;
+                            
                         }
                     }
+                    // Only actually add the rectangle if it contains at least levelOfDetail new pixels
                     if (newPixels > levelOfDetail)
                     {
                         mesh.Add(rect);
