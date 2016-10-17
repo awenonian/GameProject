@@ -16,10 +16,16 @@ namespace GameProject
         public int Width { get { return sprite.Width; } private set { } }
         public int Height { get { return sprite.Height; } private set { } }
 
+        //For testing:
         private Texture2D boxes;
+
+        private Color[] filled;
+        private Texture2D filledTex;
 
         public Mesh(Texture2D sprite, bool simpleCollisions, GraphicsDevice graphicsDevice)
         {
+            filled = new Color[sprite.Width * sprite.Height];
+
             this.sprite = sprite;
             mesh = new List<Rectangle>();
             if (simpleCollisions)
@@ -31,14 +37,24 @@ namespace GameProject
                 mesh = calculateMesh(sprite, 5);
             }
 
+            filledTex = new Texture2D(graphicsDevice, sprite.Width, sprite.Height);
+            filledTex.SetData(filled);
+
+            //For Testing:
+            Color[] colors = { Color.AliceBlue, Color.AntiqueWhite, Color.Beige, Color.Black, Color.BlanchedAlmond, Color.BlueViolet, Color.BurlyWood, Color.Chartreuse, Color.Coral, Color.Crimson, Color.DarkBlue };
             boxes = new Texture2D(graphicsDevice, sprite.Width, sprite.Height);
             Color[] data = new Color[sprite.Width * sprite.Height];
+            int index = 0;
             foreach (Rectangle r in mesh)
             {
-                data[r.Y * sprite.Width + r.X] = Color.Coral;
-                data[r.Y * sprite.Width + r.X + r.Width] = Color.Coral;
-                data[(r.Y + r.Height) * sprite.Width + r.X] = Color.Coral;
-                data[(r.Y + r.Height) * sprite.Width + r.X + r.Width] = Color.Coral;
+                for (int i = r.X; i < r.X + r.Width; i++)
+                {
+                    for (int j = r.Y; j < r.Y + r.Height; j++)
+                    {
+                        data[i * sprite.Width + j] = colors[index];
+                    }
+                }
+                index = (index + 1) % colors.Length;
             }
             boxes.SetData(data);
         }
@@ -69,9 +85,11 @@ namespace GameProject
                 {
                     if (spriteData[i*sprite.Height + j].A > 127)
                     {
+                        filled[i * sprite.Height + j] = Color.Black;
                         filledPixels[i, j] = true;
                     } else
                     {
+                        filled[i * sprite.Height + j] = Color.White;
                         filledPixels[i, j] = false;
                     }
                     counted[i, j] = false;
@@ -198,6 +216,7 @@ namespace GameProject
         public void draw(SpriteBatch sb)
         {
             sb.Draw(texture: boxes, position: Vector2.Zero);
+            sb.Draw(texture: filledTex, position: new Vector2(100, 0));
         }
     }
 }
