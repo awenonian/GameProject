@@ -16,6 +16,9 @@ namespace GameProject
         private Texture2D playerSprite;
         private Mesh playerMesh;
 
+        private Texture2D wallSprite;
+        private Mesh wallMesh;
+
         private List<Object> objects;
         private Player player;
 
@@ -52,6 +55,9 @@ namespace GameProject
             //<variable> = content.Load<Texture2D>(<filename - extension>);
             playerSprite = content.Load<Texture2D>("mario-small");
             playerMesh = new Mesh(playerSprite, false);
+
+            wallSprite = content.Load<Texture2D>("Wall");
+            wallMesh = new Mesh(wallSprite, true);
         }
 
         public void update(GameTime gameTime, KeyboardState kState, KeyboardState prevKState, GamePadState gState, GamePadState prevGState)

@@ -198,11 +198,11 @@ namespace GameProject
             {
                 for (int j = 0; j < other.mesh.Count; j++)
                 {
-                    //This is the same check as above, just rewritten
-                    if (!((otherPos.X > pos.X + Width) 
-                        && (otherPos.Y > pos.Y + Height) 
-                        && (otherPos.X + other.Width < pos.X)
-                        && (otherPos.Y + other.Height < pos.Y)))
+                    //This is the same check as above, just rewritten, and using mesh's rectangles' coordinates
+                    if (!((otherPos.X + other.mesh[j].X > pos.X + mesh[i].X + mesh[i].Width) 
+                        && (otherPos.Y + other.mesh[j].Y > pos.Y + mesh[i].Y + mesh[i].Height) 
+                        && (otherPos.X + other.mesh[j].X + other.mesh[j].Width < pos.X + mesh[i].X)
+                        && (otherPos.Y + other.mesh[j].Y + other.mesh[j].Height < pos.Y + mesh[j].Y)))
                     {
                         return true;
                     }
@@ -210,5 +210,14 @@ namespace GameProject
             }
             return false;
         }
+
+        public void scale(float xScale, float yScale)
+        {
+            for (int i = 0; i < mesh.Count; i++)
+            {
+                mesh[i] = new Rectangle((int) (mesh[i].X * xScale), (int) (mesh[i].Y * yScale), (int) (mesh[i].Width * xScale), (int) (mesh[i].Height * yScale));
+            }
+        }
+
     }
 }
