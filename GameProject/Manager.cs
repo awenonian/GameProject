@@ -14,6 +14,7 @@ namespace GameProject
     {
         //player sprites
         private Texture2D playerSprite;
+        private Mesh playerMesh;
 
         private List<Object> objects;
         private Player player;
@@ -43,13 +44,14 @@ namespace GameProject
             this.width = width;
             this.height = height;
 
-            player = new Player(playerSprite, Vector2.Zero, this);
+            player = new Player(playerMesh, Vector2.Zero, this);
         }
 
         public void loadContent(ContentManager content)
         {
             //<variable> = content.Load<Texture2D>(<filename - extension>);
             playerSprite = content.Load<Texture2D>("mario-small");
+            playerMesh = new Mesh(playerSprite, false);
         }
 
         public void update(GameTime gameTime, KeyboardState kState, KeyboardState prevKState, GamePadState gState, GamePadState prevGState)

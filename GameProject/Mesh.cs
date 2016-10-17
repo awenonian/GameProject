@@ -16,6 +16,8 @@ namespace GameProject
         public int Width { get { return sprite.Width; } private set { } }
         public int Height { get { return sprite.Height; } private set { } }
 
+        private Texture2D boxes;
+
         public Mesh(Texture2D sprite, bool simpleCollisions)
         {
             this.sprite = sprite;
@@ -27,6 +29,16 @@ namespace GameProject
             else
             {
                 mesh = calculateMesh(sprite, 5);
+            }
+
+            Texture2D boxes = new Texture2D(null, sprite.Width, sprite.Height);
+            Color[] data = new Color[sprite.Width * sprite.Height];
+            foreach (Rectangle r in mesh)
+            {
+                data[r.Y * sprite.Width + r.X] = Color.Coral;
+                data[r.Y * sprite.Width + r.X + r.Width] = Color.Coral;
+                data[(r.Y + r.Height) * sprite.Width + r.X] = Color.Coral;
+                data[(r.Y + r.Height) * sprite.Width + r.X + r.Width] = Color.Coral;
             }
         }
 
@@ -170,6 +182,11 @@ namespace GameProject
                 }
             }
             return false;
+        }
+
+        public void draw(SpriteBatch sb)
+        {
+            sb.Draw(boxes);
         }
     }
 }

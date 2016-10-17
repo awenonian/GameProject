@@ -63,6 +63,7 @@ namespace GameProject
             destinationRectangle: new Rectangle((int)(origin.X + position.X), (int)(origin.Y + position.Y), mesh.sprite.Width, mesh.sprite.Height),
             origin: origin,
             rotation: (float)Facing);
+            mesh.draw(sb);
         }
 
         public bool collision(Object other)
