@@ -61,7 +61,7 @@ namespace GameProject
 
         /// <summary>
         /// Provided a sprite, will calculate a series of boxes that contain the non transparent spaces on the sprite. 
-        /// Small boxes will be removed, and concavity will be ignored.
+        /// Small boxes will be removed, in interest of performance
         /// </summary>
         /// <param name="sprite">
         /// The sprite to calculate the mesh of.
