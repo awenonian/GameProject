@@ -60,7 +60,7 @@ namespace GameProject
         public void draw(SpriteBatch sb)
         {
             sb.Draw(mesh.sprite,
-            destinationRectangle: new Rectangle((int)(origin.X + position.X), (int)(origin.Y + position.Y), mesh.sprite.Width, mesh.sprite.Height),
+            destinationRectangle: new Rectangle((int)(origin.X + position.X), (int)(origin.Y + position.Y), mesh.Width, mesh.Height),
             origin: origin,
             rotation: (float)Facing);
         }

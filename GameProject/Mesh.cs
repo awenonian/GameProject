@@ -10,15 +10,19 @@ namespace GameProject
 {
     class Mesh
     {
+        private float xScale;
+        private float yScale;
+
         public Texture2D sprite { get; private set; }
         public List<Rectangle> mesh { get; private set; }
 
-        public int Width { get { return sprite.Width; } }
-        public int Height { get { return sprite.Height; } }
+        public int Width { get { return (int) (xScale * sprite.Width); } }
+        public int Height { get { return (int) (yScale * sprite.Height); } }
 
         public Mesh(Texture2D sprite, bool simpleCollisions)
         {
-
+            xScale = 1;
+            yScale = 1;
             this.sprite = sprite;
             Console.WriteLine(sprite.Width + ", " + sprite.Height);
             mesh = new List<Rectangle>();
@@ -213,6 +217,9 @@ namespace GameProject
 
         public void scale(float xScale, float yScale)
         {
+            this.xScale = xScale;
+            this.yScale = yScale;
+
             for (int i = 0; i < mesh.Count; i++)
             {
                 mesh[i] = new Rectangle((int) (mesh[i].X * xScale), (int) (mesh[i].Y * yScale), (int) (mesh[i].Width * xScale), (int) (mesh[i].Height * yScale));

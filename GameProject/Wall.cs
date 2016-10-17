@@ -10,9 +10,9 @@ namespace GameProject
 {
     class Wall : Object
     {
-        public Wall(Mesh mesh, Vector2 position, Manager manager) : base(mesh, position, manager)
+        public Wall(Mesh mesh, Rectangle size, Manager manager) : base(mesh, new Vector2(size.X, size.Y), manager)
         {
-
+            mesh.scale((float)size.Width / mesh.sprite.Width, (float)size.Height / mesh.sprite.Height);
         }
     }
 }

@@ -19,6 +19,8 @@ namespace GameProject
         private Texture2D wallSprite;
         private Mesh wallMesh;
 
+        private Wall testWall;
+
         private List<Object> objects;
         private Player player;
 
@@ -47,7 +49,8 @@ namespace GameProject
             this.width = width;
             this.height = height;
 
-            player = new Player(playerMesh, Vector2.Zero, this);
+            player = new Player(playerMesh, new Vector2(300, 100), this);
+            testWall = new Wall(wallMesh, new Rectangle(256, 16, 512, 32), this);
         }
 
         public void loadContent(ContentManager content)
@@ -93,7 +96,7 @@ namespace GameProject
             {
                 o.draw(sb);
             }
-
+            testWall.draw(sb);
             player.draw(sb);
         }
     }
