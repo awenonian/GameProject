@@ -121,11 +121,7 @@ namespace GameProject
                     }
                     if (airDash)
                     {
-                        dashVec.Normalize();
-                        Position += dashLength * dashVec;
-                        floatTimer = floatTime;
-                        isFloating = true;
-                        Speed = Vector2.Zero;
+                        dash(dashVec);
                     }
                 }
             }
@@ -188,14 +184,19 @@ namespace GameProject
                     }
                     if (airDash)
                     {
-                        dashVec.Normalize();
-                        Position += dashLength * dashVec;
-                        floatTimer = floatTime;
-                        isFloating = true;
-                        Speed = Vector2.Zero;
+                        dash(dashVec);
                     }
                 }
             }
+        }
+
+        private void dash(Vector2 dashVec)
+        {
+            dashVec.Normalize();
+            Position += dashLength * dashVec;
+            floatTimer = floatTime;
+            isFloating = true;
+            Speed = Vector2.Zero;
         }
     }
 }
