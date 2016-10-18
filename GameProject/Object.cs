@@ -10,7 +10,7 @@ namespace GameProject
 {
     abstract class Object
     {
-        private Mesh mesh;
+        public Mesh mesh { get; }
         private Vector2 position;
 
         private Manager manager;

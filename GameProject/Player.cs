@@ -190,10 +190,27 @@ namespace GameProject
             }
         }
 
+        /// <summary>
+        /// Dashes the player in the given direction
+        /// </summary>
+        /// <param name="dashVec">
+        /// A vector pointing in the direction of the dash
+        /// </param>
         private void dash(Vector2 dashVec)
         {
             dashVec.Normalize();
-            Position += dashLength * dashVec;
+            dashVec *= Math.Min(mesh.Width / dashVec.X, mesh.Height / dashVec.Y);
+            float dashVecLength = dashVec.Length();
+            float dashProgress = 0;
+            while (dashProgress + dashVecLength < dashLength)
+            {
+                Position += dashVec;
+                //Collision check
+                dashProgress += dashVecLength;
+            }
+            dashVec.Normalize();
+            Position += (dashLength - dashProgress) * dashVec;
+            //Collision check
             floatTimer = floatTime;
             isFloating = true;
             Speed = Vector2.Zero;
