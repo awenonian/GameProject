@@ -215,6 +215,27 @@ namespace GameProject
             return false;
         }
 
+        public bool simpleCollision(Vector2 pos, Vector2 otherPos, Mesh other)
+        {
+            if (otherPos.X > pos.X + Width)
+            {
+                return false;
+            }
+            if (otherPos.Y > pos.Y + Height)
+            {
+                return false;
+            }
+            if (otherPos.X + other.Width < pos.X)
+            {
+                return false;
+            }
+            if (otherPos.Y + other.Height < pos.Y)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public void scale(float xScale, float yScale)
         {
             this.xScale = xScale;

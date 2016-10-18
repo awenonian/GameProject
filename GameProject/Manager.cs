@@ -66,10 +66,7 @@ namespace GameProject
         public void update(GameTime gameTime, KeyboardState kState, KeyboardState prevKState, GamePadState gState, GamePadState prevGState)
         {
 
-            if (testWall.collision(player))
-            {
-                player.onCollision();
-            }
+            
 
             for (int i = objects.Count - 1; i >= 0; i--)
             {
@@ -86,6 +83,11 @@ namespace GameProject
                 player.processInput(gState, prevGState, gameTime);
             }
             player.update(gameTime, width, height);
+
+            if (testWall.collision(player))
+            {
+                player.onCollision(testWall);
+            }
 
         }
 

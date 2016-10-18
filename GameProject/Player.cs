@@ -47,10 +47,13 @@ namespace GameProject
         public override void update(GameTime gameTime, int width, int height)
         {
             base.update(gameTime, width, height);
+            /*
             if (isGrounded)
             {
                 Speed = new Vector2(Speed.X, 0);
             }
+            */
+            
             if (!isGrounded && !isFloating)
             {
                 //Gravity
@@ -68,28 +71,40 @@ namespace GameProject
             }
         }
 
-        public void onCollision()
+        public void onCollision(Object o)
         {
             isGrounded = true;
             isFloating = false;
+
+            if (!Speed.Equals(Vector2.Zero))
+            {
+                Vector2 currentSpeed = Speed;
+                currentSpeed.Normalize();
+
+                while (collision(o))
+                {
+                    Position -= currentSpeed;
+                }
+            }
+            Speed = new Vector2(Speed.X, 0);
         }
 
         public void processInput(GamePadState state, GamePadState prevState, GameTime gameTime)
         {
+            if (state.ThumbSticks.Left.Length() > .25)
+            {
+                Speed = new Vector2(moveSpeed * state.ThumbSticks.Left.X, Speed.Y);
+            }
+            else
+            {
+                Speed = new Vector2(0, Speed.Y);
+            }
             if (isGrounded)
             {
                 if (state.IsButtonDown(Buttons.A))
                 {
                     Speed = new Vector2(Speed.X, -jumpSpeed);
                     isGrounded = false;
-                }
-                if (state.ThumbSticks.Left.Length() > .25)
-                {
-                    Speed =  new Vector2(moveSpeed * state.ThumbSticks.Left.X, Speed.Y);
-                }
-                else
-                {
-                    Speed = new Vector2(0, Speed.Y);
                 }
             }
             else
@@ -124,25 +139,25 @@ namespace GameProject
         /// </param>
         public void processInput(KeyboardState state, KeyboardState prevState, GameTime gameTime)
         {
+            if (state.IsKeyDown(Keys.A))
+            {
+                Speed = new Vector2(-moveSpeed, Speed.Y);
+            }
+            else
+            {
+                // This should stop the character if no sideways key is pressed
+                Speed = new Vector2(0, Speed.Y);
+            }
+            if (state.IsKeyDown(Keys.D))
+            {
+                Speed = new Vector2(moveSpeed, Speed.Y);
+            }
             if (isGrounded)
             {
                 if (state.IsKeyDown(Keys.Space))
                 {
                     Speed = new Vector2(Speed.X, -jumpSpeed);
                     isGrounded = false;
-                }
-                if (state.IsKeyDown(Keys.A))
-                {
-                    Speed = new Vector2(-moveSpeed, Speed.Y);
-                }
-                else
-                {
-                    // This should stop the character if no sideways key is pressed
-                    Speed = new Vector2(0, Speed.Y);
-                }
-                if (state.IsKeyDown(Keys.D))
-                {
-                    Speed = new Vector2(moveSpeed, Speed.Y);
                 }
             }
             else
