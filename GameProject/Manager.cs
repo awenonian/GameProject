@@ -22,6 +22,7 @@ namespace GameProject
         private Wall testWall;
 
         private List<Object> objects;
+        private List<Wall> walls;
         private Player player;
 
         /// <summary>
@@ -38,6 +39,7 @@ namespace GameProject
         public Manager()
         {
             objects = new List<Object>();
+            walls = new List<Wall>();
             height = 0;
             width = 0;
             player = null;
@@ -50,7 +52,7 @@ namespace GameProject
             this.height = height;
 
             player = new Player(playerMesh, new Vector2(300, 100), this);
-            testWall = new Wall(wallMesh, new Rectangle(0, 300, 512, 32), this);
+            walls.Add(new Wall(wallMesh, new Rectangle(0, 300, 512, 32), this));
         }
 
         public void loadContent(ContentManager content)
@@ -65,9 +67,6 @@ namespace GameProject
 
         public void update(GameTime gameTime, KeyboardState kState, KeyboardState prevKState, GamePadState gState, GamePadState prevGState)
         {
-
-            
-
             for (int i = objects.Count - 1; i >= 0; i--)
             {
                 objects[i].update(gameTime, width, height);
@@ -83,12 +82,7 @@ namespace GameProject
                 player.processInput(gState, prevGState, gameTime);
             }
             player.update(gameTime, width, height);
-
-            if (testWall.collision(player))
-            {
-                player.onCollision(testWall);
-            }
-
+            
         }
 
         public void add(Object o)
@@ -103,8 +97,35 @@ namespace GameProject
             {
                 o.draw(sb);
             }
-            testWall.draw(sb);
+            foreach (Wall w in walls)
+            {
+                w.draw(sb);
+            }
             player.draw(sb);
+        }
+
+        public Object collision(Object obj)
+        {
+            foreach (Object o in objects)
+            {
+                if (obj.collision(o))
+                {
+                    return o;
+                }
+            }
+            return null;
+        }
+
+        public Wall wallCollision(Object obj)
+        {
+            foreach (Wall w in walls)
+            {
+                if (obj.collision(w))
+                {
+                    return w;
+                }
+            }
+            return null;
         }
     }
 }

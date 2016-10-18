@@ -53,7 +53,14 @@ namespace GameProject
                 Speed = new Vector2(Speed.X, 0);
             }
             */
-            
+
+            Wall w;
+            w = manager.wallCollision(this);
+            if (w != null)
+            {
+                onCollision(w);
+            }
+
             if (!isGrounded && !isFloating)
             {
                 //Gravity
@@ -199,18 +206,39 @@ namespace GameProject
         private void dash(Vector2 dashVec)
         {
             dashVec.Normalize();
-            dashVec *= Math.Min(mesh.Width / dashVec.X, mesh.Height / dashVec.Y);
+            dashVec *= Math.Min(mesh.Width / Math.Abs(dashVec.X), mesh.Height / Math.Abs(dashVec.Y));
             float dashVecLength = dashVec.Length();
             float dashProgress = 0;
+            Wall w = null;
             while (dashProgress + dashVecLength < dashLength)
             {
                 Position += dashVec;
-                //Collision check
+                w = manager.wallCollision(this);
+                if (w != null)
+                {
+                    dashVec.Normalize();
+                    while (w.collision(this))
+                    {
+                        Position -= dashVec;
+                    }
+                    floatTimer = floatTime;
+                    isFloating = true;
+                    Speed = Vector2.Zero;
+                    return;
+                }
                 dashProgress += dashVecLength;
             }
             dashVec.Normalize();
             Position += (dashLength - dashProgress) * dashVec;
-            //Collision check
+            w = manager.wallCollision(this);
+            if (w != null)
+            {
+                dashVec.Normalize();
+                while (w.collision(this))
+                {
+                    Position -= dashVec;
+                }
+            }
             floatTimer = floatTime;
             isFloating = true;
             Speed = Vector2.Zero;
