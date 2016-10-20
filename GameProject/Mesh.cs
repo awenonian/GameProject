@@ -42,8 +42,7 @@ namespace GameProject
             sprite.GetData(0, null, spriteData, 0, sprite.Width * sprite.Height);
 
             bool[,] filledPixels = new bool[sprite.Width, sprite.Height];
-
-            // Set up: Mark whether pixels are filled or not, and mark all pixels as uncounted
+            
             for (int i = 0; i < sprite.Width; i++)
             {
                 for (int j = 0; j < sprite.Height; j++)
@@ -81,7 +80,7 @@ namespace GameProject
             
             bool[,] counted = new bool[sprite.Width, sprite.Height];
 
-            // Set up: Mark whether pixels are filled or not, and mark all pixels as uncounted
+            // Mark all pixels as uncounted
             for (int i = 0; i < sprite.Width; i++)
             {
                 for (int j = 0; j < sprite.Height; j++)
