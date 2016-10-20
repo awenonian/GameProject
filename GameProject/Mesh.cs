@@ -32,8 +32,34 @@ namespace GameProject
             }
             else
             {
-                mesh = calculateMesh(sprite, 5);
+                mesh = calculateMesh(getFilledPixels(sprite), 5);
             }
+        }
+
+        private bool[,] getFilledPixels(Texture2D sprite)
+        {
+            Color[] spriteData = new Color[sprite.Width * sprite.Height];
+            sprite.GetData(0, null, spriteData, 0, sprite.Width * sprite.Height);
+
+            bool[,] filledPixels = new bool[sprite.Width, sprite.Height];
+
+            // Set up: Mark whether pixels are filled or not, and mark all pixels as uncounted
+            for (int i = 0; i < sprite.Width; i++)
+            {
+                for (int j = 0; j < sprite.Height; j++)
+                {
+                    if (spriteData[j * sprite.Width + i].A > 127)
+                    {
+                        filledPixels[i, j] = true;
+                    }
+                    else
+                    {
+                        filledPixels[i, j] = false;
+                    }
+                }
+            }
+
+            return filledPixels;
         }
 
         /// <summary>
@@ -49,14 +75,10 @@ namespace GameProject
         /// <returns>
         /// A List with the series of rectangles representing the sprite.
         /// </returns>
-        private List<Rectangle> calculateMesh(Texture2D sprite, int levelOfDetail)
+        private List<Rectangle> calculateMesh(bool[,] filledPixels, int levelOfDetail)
         {
             List<Rectangle> mesh = new List<Rectangle>();
-
-            Color[] spriteData = new Color[sprite.Width * sprite.Height];
-            sprite.GetData(0, null, spriteData, 0, sprite.Width*sprite.Height);
-
-            bool[,] filledPixels = new bool[sprite.Width, sprite.Height];
+            
             bool[,] counted = new bool[sprite.Width, sprite.Height];
 
             // Set up: Mark whether pixels are filled or not, and mark all pixels as uncounted
@@ -64,14 +86,6 @@ namespace GameProject
             {
                 for (int j = 0; j < sprite.Height; j++)
                 {
-                    if (spriteData[j*sprite.Width + i].A > 127)
-                    {
-                        filledPixels[i, j] = true;
-                    }
-                    else
-                    {
-                        filledPixels[i, j] = false;
-                    }
                     counted[i, j] = false;
                 }
             }
