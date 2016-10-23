@@ -98,14 +98,30 @@ namespace GameProject
 
         public void processInput(GamePadState state, GamePadState prevState, GameTime gameTime)
         {
-            if (state.ThumbSticks.Left.Length() > .25)
+            // Movement
+            if (!isFloating)
             {
-                Speed = new Vector2(moveSpeed * state.ThumbSticks.Left.X, Speed.Y);
+                if (state.ThumbSticks.Left.Length() > .25)
+                {
+                    Speed = new Vector2(moveSpeed * state.ThumbSticks.Left.X, Speed.Y);
+                }
+                else
+                {
+                    Speed = new Vector2(0, Speed.Y);
+                }
             }
             else
             {
-                Speed = new Vector2(0, Speed.Y);
+                if (state.ThumbSticks.Left.Length() > .25)
+                {
+                    Speed = moveSpeed * state.ThumbSticks.Left;
+                }
+                else
+                {
+                    Speed = new Vector2(0, 0);
+                }
             }
+            // Jumping and Airdash
             if (isGrounded)
             {
                 if (state.IsButtonDown(Buttons.A))
@@ -142,19 +158,54 @@ namespace GameProject
         /// </param>
         public void processInput(KeyboardState state, KeyboardState prevState, GameTime gameTime)
         {
-            if (state.IsKeyDown(Keys.A))
+            // Movement
+            if (!isFloating)
             {
-                Speed = new Vector2(-moveSpeed, Speed.Y);
+                if (state.IsKeyDown(Keys.A))
+                {
+                    Speed = new Vector2(-moveSpeed, Speed.Y);
+                }
+                else
+                {
+                    // This should stop the character if no sideways key is pressed
+                    Speed = new Vector2(0, Speed.Y);
+                }
+                if (state.IsKeyDown(Keys.D))
+                {
+                    Speed = new Vector2(moveSpeed, Speed.Y);
+                }
             }
             else
             {
-                // This should stop the character if no sideways key is pressed
-                Speed = new Vector2(0, Speed.Y);
+                if (state.IsKeyDown(Keys.A))
+                {
+                    Speed = new Vector2(-moveSpeed/2, Speed.Y);
+                }
+                else
+                {
+                    // This should stop the character if no sideways key is pressed
+                    Speed = new Vector2(0, Speed.Y);
+                }
+                if (state.IsKeyDown(Keys.D))
+                {
+                    Speed = new Vector2(moveSpeed/2, Speed.Y);
+                }
+
+                if (state.IsKeyDown(Keys.W))
+                {
+                    Speed = new Vector2(Speed.X, -moveSpeed/2);
+                }
+                else
+                {
+                    // This should stop the character if no sideways key is pressed
+                    Speed = new Vector2(Speed.X, 0);
+                }
+                if (state.IsKeyDown(Keys.S))
+                {
+                    Speed = new Vector2(Speed.X, moveSpeed/2);
+                }
             }
-            if (state.IsKeyDown(Keys.D))
-            {
-                Speed = new Vector2(moveSpeed, Speed.Y);
-            }
+            // Jumping and Airdash
             if (isGrounded)
             {
                 if (state.IsKeyDown(Keys.Space))
