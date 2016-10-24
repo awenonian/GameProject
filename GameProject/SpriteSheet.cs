@@ -16,11 +16,13 @@ namespace GameProject
 
         int state;
 
+        double elapsedTime;
+
         public SpriteSheet(Texture2D spriteSheet, int width, int height, GraphicsDevice gd)
         {
             sheet = new List<List<Texture2D>>();
             state = 0;
-
+            elapsedTime = 0;
 
             for (int i = 0; i < spriteSheet.Height; i += height)
             {
@@ -43,11 +45,15 @@ namespace GameProject
         public void setState(int i)
         {
             state = i % sheet.Count();
+            elapsedTime = 0;
         }
 
-        public void draw(SpriteBatch sb, Vector2 position, int width, int height, double elapsedTime)
+        public void draw(SpriteBatch sb, Vector2 position, int width, int height, GameTime gt)
         {
-            int index = (int)(elapsedTime / animationTime) % sheet.Count();
+            elapsedTime += gt.ElapsedGameTime.TotalSeconds;
+
+            int index = (int)(elapsedTime / animationTime) % sheet[state].Count();
+
             sb.Draw(sheet[state][index], position, new Rectangle(0, 0, width, height), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
     }
