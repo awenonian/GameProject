@@ -13,9 +13,10 @@ namespace GameProject
         private Vector2 origin;
         private float rotation;
 
-        private Vector2 direction;
-
         private Texture2D line;
+
+        private Vector2 direction;
+        float length;
 
         public BulletLine(Vector2 origin, float rotation)
         {
@@ -23,6 +24,8 @@ namespace GameProject
             this.rotation = rotation;
 
             direction = new Vector2((float) Math.Cos(rotation), (float) Math.Sin(rotation));
+            //Calculate length as distance until collision with wall
+            length = line.Width;
         }
 
         public bool isColliding(Rectangle rect)
@@ -60,7 +63,7 @@ namespace GameProject
 
         public void draw(SpriteBatch sb)
         {
-            sb.Draw(line, origin, new Rectangle(0, 0, width, height), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+            sb.Draw(line, origin, new Rectangle(0, 0, (int) length + 1, line.Height), Color.White, rotation, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
     }
