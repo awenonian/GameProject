@@ -53,11 +53,6 @@ namespace GameProject
         /// </param>
         public void draw(SpriteBatch sb)
         {
-            /*sb.Draw(mesh.sprite,
-            destinationRectangle: new Rectangle((int)(Position.X), (int)(Position.Y), mesh.Width, mesh.Height),
-            sourceRectangle: new Rectangle(0, 0, mesh.sprite.Width, mesh.sprite.Height),
-            origin: origin,
-            rotation: (float)Facing);*/
             sb.Draw(mesh.sprite, Position, new Rectangle(0, 0, mesh.Width, mesh.Height), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
