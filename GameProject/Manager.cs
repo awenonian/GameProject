@@ -23,6 +23,7 @@ namespace GameProject
 
         private List<Object> objects;
         private List<Wall> walls;
+        private List<BulletLine> bulletLines;
         private Player player;
 
         /// <summary>
@@ -40,6 +41,7 @@ namespace GameProject
         {
             objects = new List<Object>();
             walls = new List<Wall>();
+            bulletLines = new List<BulletLine>();
             height = 0;
             width = 0;
             player = null;
@@ -83,11 +85,6 @@ namespace GameProject
             }
             player.update(gameTime, width, height);
             
-        }
-
-        public void add(Object o)
-        {
-            objects.Add(o);
         }
 
         public void draw(SpriteBatch sb)

@@ -26,7 +26,7 @@ namespace GameProject
             this.manager = manager;
 
             direction = new Vector2((float) Math.Cos(rotation), (float) Math.Sin(rotation));
-            //Calculate length as distance until collision with wall
+            // Calculate length as distance until collision with wall
             length = findLength(manager);
         }
 
@@ -49,6 +49,11 @@ namespace GameProject
             }
             // Just a default value that should be off the screen, if no walls collide
             return 2048;
+        }
+
+        public Vector2 getHitPosition()
+        {
+            return origin + length * direction;
         }
 
         public bool isColliding(Rectangle rect)
