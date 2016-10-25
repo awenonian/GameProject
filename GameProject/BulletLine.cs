@@ -33,22 +33,30 @@ namespace GameProject
         private float findLength(Manager m)
         {
             List<Rectangle> walls = m.getWalls();
+            // Set it to a default value that's long enough to go offscreen
+            float minLength = 4096;
+
             foreach (Rectangle r in walls)
             {
                 if (isColliding(r))
                 {
+                    float testLength = 0;
                     if (direction.X < 0)
                     {
-                        return (origin.X - (r.X + r.Width)) / direction.X;
+                        testLength = (origin.X - (r.X + r.Width)) / direction.X;
                     }
                     else
                     {
-                        return (r.X - origin.X) / direction.X;
+                        testLength = (r.X - origin.X) / direction.X;
+                    }
+                    if (testLength < minLength)
+                    {
+                        minLength = testLength;
                     }
                 }
             }
             // Just a default value that should be off the screen, if no walls collide
-            return 2048;
+            return minLength;
         }
 
         public Vector2 getHitPosition()
