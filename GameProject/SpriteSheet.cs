@@ -38,6 +38,11 @@ namespace GameProject
                     {
                         sheet[i].Add(sprite);
                     }
+                    else
+                    {
+                        // If we run into a fully transparent sprite, we can stop checking
+                        break;
+                    }
                 }
             }
         }
