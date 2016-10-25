@@ -12,20 +12,43 @@ namespace GameProject
     {
         private Vector2 origin;
         private float rotation;
+        private Manager manager;
 
         private Texture2D line;
 
         private Vector2 direction;
         float length;
 
-        public BulletLine(Vector2 origin, float rotation)
+        public BulletLine(Vector2 origin, float rotation, Manager manager)
         {
             this.origin = origin;
             this.rotation = rotation;
+            this.manager = manager;
 
             direction = new Vector2((float) Math.Cos(rotation), (float) Math.Sin(rotation));
             //Calculate length as distance until collision with wall
-            length = line.Width;
+            length = findLength(manager);
+        }
+
+        private float findLength(Manager m)
+        {
+            List<Rectangle> walls = m.getWalls();
+            foreach (Rectangle r in walls)
+            {
+                if (isColliding(r))
+                {
+                    if (direction.X < 0)
+                    {
+                        return (origin.X - (r.X + r.Width)) / direction.X;
+                    }
+                    else
+                    {
+                        return (r.X - origin.X) / direction.X;
+                    }
+                }
+            }
+            // Just a default value that should be off the screen, if no walls collide
+            return 2048;
         }
 
         public bool isColliding(Rectangle rect)

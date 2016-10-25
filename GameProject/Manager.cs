@@ -127,5 +127,16 @@ namespace GameProject
             }
             return null;
         }
+
+        public List<Rectangle> getWalls()
+        {
+            List<Rectangle> rects = new List<Rectangle>();
+            foreach (Wall w in walls)
+            {
+                // Walls should always be simple, so they're mesh's should only have 1 rectangle
+                rects.Add(w.mesh.mesh[0]);
+            }
+            return rects;
+        }
     }
 }
