@@ -43,6 +43,7 @@
     <Compile Include="Manager.cs" />
     <Compile Include="Mesh.cs" />
     <Compile Include="Object.cs" />
+    <Compile Include="Plan.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
