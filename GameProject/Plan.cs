@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,13 @@ namespace GameProject
         private Manager manager;
         private double timeToShot;
         private static double bufferTime = .5;
+        public Color color { get; set; }
 
         public Plan(Vector2 origin, int count, float startAngle, float endAngle, bool regularSpread, double timeToShot, Manager manager)
         {
             this.timeToShot = timeToShot;
             this.manager = manager;
+            color = Color.White;
 
             shots = new BulletLine[count];
             Random rand = new Random();
@@ -43,12 +46,9 @@ namespace GameProject
         public void update(GameTime gameTime)
         {
             timeToShot -= gameTime.ElapsedGameTime.TotalSeconds;
-            if (timeToShot <= bufferTime)
+            if (timeToShot <= bufferTime && isSafe(manager.Player))
             {
-                if (isSafe(manager.Player))
-                {
-                    fire(true);
-                }
+                fire(true);
             }
             else if (timeToShot <= 0)
             {
@@ -75,6 +75,14 @@ namespace GameProject
                 manager.Player.hit();
             }
             // Deconstruct
+        }
+
+        public void draw(SpriteBatch sb)
+        {
+            foreach (BulletLine bl in shots)
+            {
+                bl.draw(sb, color);
+            }
         }
 
     }

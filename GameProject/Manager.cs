@@ -20,10 +20,9 @@ namespace GameProject
         private Mesh wallMesh;
 
         private Wall testWall;
-
-        private List<Object> objects;
+        
         private List<Wall> walls;
-        private List<BulletLine> bulletLines;
+        private List<Plan> shots;
         public Player Player { get; private set; }
 
         /// <summary>
@@ -39,9 +38,8 @@ namespace GameProject
 
         public Manager()
         {
-            objects = new List<Object>();
             walls = new List<Wall>();
-            bulletLines = new List<BulletLine>();
+            shots = new List<Plan>();
             height = 0;
             width = 0;
             Player = null;
@@ -69,10 +67,6 @@ namespace GameProject
 
         public void update(GameTime gameTime, KeyboardState kState, KeyboardState prevKState, GamePadState gState, GamePadState prevGState)
         {
-            for (int i = objects.Count - 1; i >= 0; i--)
-            {
-                objects[i].update(gameTime, width, height);
-            }
             // If someone is operating keyboard
             if (kState.GetPressedKeys().Length != 0)
             {
@@ -90,27 +84,15 @@ namespace GameProject
         public void draw(SpriteBatch sb)
         {
             //sb.Draw(background, destinationRectangle: new Rectangle(0, 0, width, height));
-            foreach (Object o in objects)
+            foreach (Plan p in shots)
             {
-                o.draw(sb);
+                p.draw(sb);
             }
             foreach (Wall w in walls)
             {
                 w.draw(sb);
             }
             Player.draw(sb);
-        }
-
-        public Object collision(Object obj)
-        {
-            foreach (Object o in objects)
-            {
-                if (obj.collision(o))
-                {
-                    return o;
-                }
-            }
-            return null;
         }
 
         public Wall wallCollision(Object obj)

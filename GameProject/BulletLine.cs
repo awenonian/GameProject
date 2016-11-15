@@ -38,7 +38,7 @@ namespace GameProject
 
             foreach (Rectangle r in walls)
             {
-                if (isColliding(r))
+                if (rectCollide(r))
                 {
                     float testLength = 0;
                     if (direction.X < 0)
@@ -115,9 +115,9 @@ namespace GameProject
             return true;
         }
 
-        public void draw(SpriteBatch sb)
+        public void draw(SpriteBatch sb, Color color)
         {
-            sb.Draw(line, origin, new Rectangle(0, 0, (int) length + 1, line.Height), Color.White, rotation, Vector2.Zero, 1f, SpriteEffects.None, 0);
+            sb.Draw(line, origin, new Rectangle(0, 0, (int) length + 1, line.Height), color, rotation, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
     }
