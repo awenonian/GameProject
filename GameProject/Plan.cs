@@ -12,6 +12,7 @@ namespace GameProject
         private BulletLine[] shots;
         private Manager manager;
         private double timeToShot;
+        private static double bufferTime = .5;
 
         public Plan(Vector2 origin, int count, float startAngle, float endAngle, bool regularSpread, double timeToShot, Manager manager)
         {
@@ -42,21 +43,38 @@ namespace GameProject
         public void update(GameTime gameTime)
         {
             timeToShot -= gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (timeToShot <= 0)
+            if (timeToShot <= bufferTime)
             {
-                fire();
+                if (isSafe(manager.Player))
+                {
+                    fire(true);
+                }
+            }
+            else if (timeToShot <= 0)
+            {
+                fire(isSafe(manager.Player));
             }
         }
 
         public bool isSafe(Player player)
         {
+            foreach (BulletLine bl in shots)
+            {
+                if (bl.isColliding(player.Position, player.mesh))
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
-        public void fire()
+        public void fire(bool safe)
         {
-
+            if (!safe)
+            {
+                manager.Player.hit();
+            }
+            // Deconstruct
         }
 
     }

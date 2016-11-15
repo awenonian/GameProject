@@ -294,5 +294,10 @@ namespace GameProject
             isFloating = true;
             Speed = Vector2.Zero;
         }
+
+        public void hit()
+        {
+            // Do damage, or kill player if they're out of hitpoints. Or just kill the player if we go one shot one kill.
+        }
     }
 }

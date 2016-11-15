@@ -24,7 +24,7 @@ namespace GameProject
         private List<Object> objects;
         private List<Wall> walls;
         private List<BulletLine> bulletLines;
-        private Player player;
+        public Player Player { get; private set; }
 
         /// <summary>
         /// Width of the game screen.
@@ -44,7 +44,7 @@ namespace GameProject
             bulletLines = new List<BulletLine>();
             height = 0;
             width = 0;
-            player = null;
+            Player = null;
             r = new Random();
         }
 
@@ -53,7 +53,7 @@ namespace GameProject
             this.width = width;
             this.height = height;
 
-            player = new Player(playerMesh, new Vector2(300, 100), this);
+            Player = new Player(playerMesh, new Vector2(300, 100), this);
             walls.Add(new Wall(wallMesh, new Rectangle(0, 300, 512, 32), this));
         }
 
@@ -76,14 +76,14 @@ namespace GameProject
             // If someone is operating keyboard
             if (kState.GetPressedKeys().Length != 0)
             {
-                player.processInput(kState, prevKState, gameTime);
+                Player.processInput(kState, prevKState, gameTime);
             }
             // Otherwise, assume Game Pad controls
             else
             {
-                player.processInput(gState, prevGState, gameTime);
+                Player.processInput(gState, prevGState, gameTime);
             }
-            player.update(gameTime, width, height);
+            Player.update(gameTime, width, height);
             
         }
 
@@ -98,7 +98,7 @@ namespace GameProject
             {
                 w.draw(sb);
             }
-            player.draw(sb);
+            Player.draw(sb);
         }
 
         public Object collision(Object obj)

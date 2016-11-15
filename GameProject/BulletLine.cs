@@ -64,7 +64,25 @@ namespace GameProject
             return origin + length * direction;
         }
 
-        public bool isColliding(Rectangle rect)
+        public bool isColliding(Vector2 position, Mesh mesh)
+        {
+            if (!rectCollide(new Rectangle((int) position.X, (int) position.Y, mesh.Width, mesh.Height)))
+            {
+                return false;
+            }
+            foreach (Rectangle r in mesh.mesh)
+            {
+                Rectangle rect = r;
+                rect.Offset(position);
+                if (rectCollide(rect))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool rectCollide(Rectangle rect)
         {
             // If you're behind the bullet
             if (direction.X < 0)
