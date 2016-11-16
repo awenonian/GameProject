@@ -84,15 +84,21 @@ namespace GameProject
         public void draw(SpriteBatch sb)
         {
             //sb.Draw(background, destinationRectangle: new Rectangle(0, 0, width, height));
+            sb.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
             foreach (Plan p in shots)
             {
                 p.draw(sb);
             }
+            sb.End();
+            sb.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
             foreach (Wall w in walls)
             {
                 w.draw(sb);
             }
+            sb.End();
+            sb.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
             Player.draw(sb);
+            sb.End();
         }
 
         public Wall wallCollision(Object obj)
