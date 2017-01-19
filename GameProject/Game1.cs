@@ -117,11 +117,8 @@ namespace GameProject
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
-            //spriteBatch.Draw(texture, position);
+            
             manager.draw(spriteBatch);
-            spriteBatch.End();
 
             base.Draw(gameTime);
         }
