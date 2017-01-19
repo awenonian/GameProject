@@ -74,7 +74,6 @@ namespace GameProject
                 {
                     onCollision(w);
                 }
-
             }
 
             if (!isGrounded && !isFloating)
