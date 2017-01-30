@@ -297,6 +297,7 @@ namespace GameProject
 
         public void hit()
         {
+            Console.WriteLine("HIT!");
             // Do damage, or kill player if they're out of hitpoints. Or just kill the player if we go one shot one kill.
         }
     }

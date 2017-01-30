@@ -13,7 +13,7 @@ namespace GameProject
         public Mesh mesh { get; }
         private Vector2 position;
 
-        private Manager manager;
+        public Manager manager;
 
         public Vector2 Position { get; protected set; }
 
@@ -51,7 +51,7 @@ namespace GameProject
         /// <param name="sb">
         /// The spritebatch for drawing
         /// </param>
-        public void draw(SpriteBatch sb)
+        public virtual void draw(SpriteBatch sb)
         {
             sb.Draw(mesh.sprite, Position, new Rectangle(0, 0, mesh.Width, mesh.Height), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }

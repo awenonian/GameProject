@@ -13,10 +13,10 @@ namespace GameProject
         private BulletLine[] shots;
         private Manager manager;
         private double timeToShot;
-        private static double bufferTime = .5;
+        private static double bufferTime = .2;
         public Color color { get; set; }
 
-        public Plan(Vector2 origin, int count, float startAngle, float endAngle, bool regularSpread, double timeToShot, Manager manager)
+        public Plan(Vector2 origin, int count, float startAngle, float endAngle, bool regularSpread, double timeToShot, Texture2D bulletLine, Manager manager)
         {
             this.timeToShot = timeToShot;
             this.manager = manager;
@@ -27,33 +27,45 @@ namespace GameProject
             for (int i = 0; i < count; i ++)
             {
                 if (regularSpread) {
-                    shots[i] = new BulletLine(origin, startAngle + i * (endAngle - startAngle), manager);
+                    shots[i] = new BulletLine(origin, startAngle + i * (endAngle - startAngle), bulletLine, manager);
                 }
                 else
                 {
-                    shots[i] = new BulletLine(origin, (float) rand.NextDouble() * (endAngle - startAngle) + startAngle, manager);
+                    shots[i] = new BulletLine(origin, (float) rand.NextDouble() * (endAngle - startAngle) + startAngle, bulletLine, manager);
                 }
             }
         }
 
-        public Plan(BulletLine[] shots, double timeToShot, Manager manager)
+        public Plan(BulletLine[] shots, double timeToShot, Texture2D bulletLine, Manager manager)
         {
             this.shots = shots;
             this.timeToShot = timeToShot;
             this.manager = manager;
         }
 
-        public void update(GameTime gameTime)
+        /// <summary>
+        /// updates the timer of the plan, fires if it's time to fire.
+        /// </summary>
+        /// <param name="gameTime">
+        /// The game timer for getting the elapsed time since last update
+        /// </param>
+        /// <returns>
+        /// True if it fired and needs to be deconstructed
+        /// </returns>
+        public bool update(GameTime gameTime)
         {
             timeToShot -= gameTime.ElapsedGameTime.TotalSeconds;
             if (timeToShot <= bufferTime && isSafe(manager.Player))
             {
                 fire(true);
+                return true;
             }
             else if (timeToShot <= 0)
             {
                 fire(isSafe(manager.Player));
+                return true;
             }
+            return false;
         }
 
         public bool isSafe(Player player)
@@ -70,11 +82,11 @@ namespace GameProject
 
         public void fire(bool safe)
         {
+            Console.WriteLine("FIRING!");
             if (!safe)
             {
                 manager.Player.hit();
             }
-            // Deconstruct
         }
 
         public void draw(SpriteBatch sb)

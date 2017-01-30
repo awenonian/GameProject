@@ -19,10 +19,16 @@ namespace GameProject
         private Texture2D wallSprite;
         private Mesh wallMesh;
 
+        private Texture2D enemySprite;
+        private Mesh enemyMesh;
+
+        private Texture2D bulletLine;
+
         private Wall testWall;
         
         private List<Wall> walls;
         private List<Plan> shots;
+        private List<Object> objects;
         public Player Player { get; private set; }
 
         /// <summary>
@@ -40,6 +46,7 @@ namespace GameProject
         {
             walls = new List<Wall>();
             shots = new List<Plan>();
+            objects = new List<Object>();
             height = 0;
             width = 0;
             Player = null;
@@ -52,6 +59,7 @@ namespace GameProject
             this.height = height;
 
             Player = new Player(playerMesh, new Vector2(300, 100), this);
+            objects.Add(new Enemy(enemyMesh, new Vector2(50, 50), bulletLine, this));
             walls.Add(new Wall(wallMesh, new Rectangle(0, 300, 512, 32), this));
         }
 
@@ -60,6 +68,11 @@ namespace GameProject
             //<variable> = content.Load<Texture2D>(<filename - extension>);
             playerSprite = content.Load<Texture2D>("mario-small");
             playerMesh = new Mesh(playerSprite, false);
+
+            enemySprite = content.Load<Texture2D>("mario-small");
+            enemyMesh = new Mesh(enemySprite, false);
+
+            bulletLine = content.Load<Texture2D>("bulletLine");
 
             wallSprite = content.Load<Texture2D>("Wall");
             wallMesh = new Mesh(wallSprite, true);
@@ -78,6 +91,11 @@ namespace GameProject
                 Player.processInput(gState, prevGState, gameTime);
             }
             Player.update(gameTime, width, height);
+
+            foreach(Object o in objects)
+            {
+                o.update(gameTime, width, height);
+            }
             
         }
 
@@ -85,9 +103,13 @@ namespace GameProject
         {
             //sb.Draw(background, destinationRectangle: new Rectangle(0, 0, width, height));
             sb.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);
-            foreach (Plan p in shots)
+            /*foreach (Plan p in shots)
             {
                 p.draw(sb);
+            }*/
+            foreach (Object o in objects)
+            {
+                o.draw(sb);
             }
             sb.End();
             sb.Begin(SpriteSortMode.Deferred, null, SamplerState.LinearWrap, null, null);

@@ -19,11 +19,12 @@ namespace GameProject
         private Vector2 direction;
         float length;
 
-        public BulletLine(Vector2 origin, float rotation, Manager manager)
+        public BulletLine(Vector2 origin, float rotation, Texture2D bulletLine, Manager manager)
         {
             this.origin = origin;
             this.rotation = rotation;
             this.manager = manager;
+            line = bulletLine;
 
             direction = new Vector2((float) Math.Cos(rotation), (float) Math.Sin(rotation));
             // Calculate length as distance until collision with wall
