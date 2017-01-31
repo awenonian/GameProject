@@ -53,23 +53,33 @@ namespace GameProject
                 Speed = new Vector2(Speed.X, 0);
             }
             */
-
             Wall w;
-            w = manager.wallCollision(this);
-            if (w != null)
+            if (isGrounded)
             {
-                onCollision(w);
+                Position += new Vector2(0, 1);
+                w = manager.wallCollision(this);
+                if (w != null)
+                {
+                    Position -= new Vector2(0, 1);
+                }
+                else
+                {
+                    isGrounded = false;
+                }
+            }
+            else
+            {
+                w = manager.wallCollision(this);
+                if (w != null)
+                {
+                    onCollision(w);
+                }
             }
 
             if (!isGrounded && !isFloating)
             {
                 //Gravity
                 Speed += (float)(gameTime.ElapsedGameTime.TotalSeconds) * gravity;
-            }
-            if (Position.Y > 300) //This is the temporary ground, later we'll put collision detection in this statement
-            {
-                isGrounded = true;
-                isFloating = false;
             }
             floatTimer -= gameTime.ElapsedGameTime.TotalSeconds;
             if (floatTimer < 0)
