@@ -31,7 +31,8 @@ namespace GameProject
             shotTimer -= gameTime.ElapsedGameTime.TotalSeconds;
             if (shotTimer <= 0)
             {
-                double playerAngle = Math.Atan2(Position.Y - manager.Player.Position.Y, Position.X - manager.Player.Position.X);
+                double playerAngle = Math.Atan2(manager.Player.Position.Y - Position.X, manager.Player.Position.X - Position.X);
+                Console.WriteLine(playerAngle);
                 shot = new Plan(Position, 3, (float) (playerAngle - Math.PI / 8), (float) (playerAngle + Math.PI / 8), false, 1, bulletLine, manager);
                 shotTimer = 1.5 + (.5 * random.NextDouble());
             }

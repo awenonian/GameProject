@@ -39,6 +39,7 @@ namespace GameProject
 
             foreach (Rectangle r in walls)
             {
+                //This is just really crappy code. It needs to be fixed
                 if (rectCollide(r))
                 {
                     float testLength = 0;
@@ -50,6 +51,7 @@ namespace GameProject
                     {
                         testLength = (r.X - origin.X) / direction.X;
                     }
+                    testLength = Math.Abs(testLength);
                     if (testLength < minLength)
                     {
                         minLength = testLength;

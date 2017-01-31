@@ -14,6 +14,7 @@ namespace GameProject
         private Manager manager;
         private double timeToShot;
         private static double bufferTime = .2;
+        private static int numShots = 0; //Temp variable for reporting
         public Color color { get; set; }
 
         public Plan(Vector2 origin, int count, float startAngle, float endAngle, bool regularSpread, double timeToShot, Texture2D bulletLine, Manager manager)
@@ -82,7 +83,8 @@ namespace GameProject
 
         public void fire(bool safe)
         {
-            Console.WriteLine("FIRING!");
+            numShots++;
+            Console.WriteLine(numShots + ": FIRING!");
             if (!safe)
             {
                 manager.Player.hit();
